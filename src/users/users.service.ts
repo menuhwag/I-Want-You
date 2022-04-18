@@ -56,7 +56,6 @@ export class UsersService {
   }
 
   public async login(username: string, password: string){
-    console.log({username, password});
     // username으로 조회
     const user = await this.userRepository.findOne({where:{username}});
     if (!user){
@@ -93,10 +92,7 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
-  public async findOne(uuid ,id: string) {
-    if (uuid !== id){
-      throw new ForbiddenException();
-    }
+  public async findOne(id: string) {
     const user = await this.userRepository.findOne({select: ['uuid', 'username', 'email', 'nickname', 'allow_public', 'uuid'], where: {uuid: id}});
     if (user == null){
       throw new NotFoundException('해당 유저가 존재하지 않습니다.');
@@ -113,11 +109,7 @@ export class UsersService {
     return await this.userRepository.find({select: ['uuid', 'username', 'email', 'nickname', 'allow_public', 'is_active'], where: option});
   }
 
-  public async update(uuid, id: string, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    if (uuid !== id){
-      throw new ForbiddenException();
-    }
+  public async update(id: string, updateUserDto: UpdateUserDto) {
     let user = await this.userRepository.findOne({where: {uuid: id}});
     if (!user) {
       throw new NotFoundException();

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Patch, Param, Delete, HttpCode, ParseIntPipe, DefaultValuePipe, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Patch, Param, Delete, HttpCode, ParseIntPipe, DefaultValuePipe, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -21,9 +21,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<string> {
+  create(@Body() createUserDto: CreateUserDto): Promise<string> {
     const { username, email, password, nickname } = createUserDto;
-    return await this.usersService.create(username, email, password, nickname); 
+    return this.usersService.create(username, email, password, nickname); 
   }
 
   @HttpCode(200)
@@ -35,48 +35,57 @@ export class UsersController {
 
   @HttpCode(200)
   @Post('/login')
-  async login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: LoginDto) {
     const { username, password } = loginDto;
-    return await this.usersService.login(username, password);
+    return this.usersService.login(username, password);
   }
 
   @Get('/exists')
-  async checkExists(@Query('key') key: 'id'|'email'|'nickname', @Query('value') value: string): Promise<boolean>{
-    return await this.usersService.checkExists(key, value);
+  checkExists(@Query('key') key: 'id'|'email'|'nickname', @Query('value') value: string): Promise<boolean>{
+    return this.usersService.checkExists(key, value);
   }
 
   @Get('/test')
-  async test(){
-    return await this.usersService.test();
+  test(){
+    return this.usersService.test();
   }
 
   @Get()
   @Roles('ADMIN')
   @UseGuards(AuthGuard, RolesGuard)
-  async findAll(
+  findAll(
     @UserInfo('uuid') uuid,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
   ): Promise<UserEntity[]> {
-    return await this.usersService.findAll(uuid, offset, limit);
+    return this.usersService.findAll(uuid, offset, limit);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  async findOne(@UserInfo('uuid') uuid, @Param('id') id: string): Promise<UserEntity> {
-    return await this.usersService.findOne(uuid, id);
+  findOne(@UserInfo('uuid') uuid, @Param('id') id: string): Promise<UserEntity> {
+    this.confirmOwnership(uuid, id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard)
   update(@UserInfo('uuid') uuid, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(uuid, id, updateUserDto);
+    this.confirmOwnership(uuid, id);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   @HttpCode(204)
-  async remove(@Param('id') id: string) {
-    return await this.usersService.remove(id);
+  remove(@UserInfo('uuid') uuid, @Param('id') id: string) {
+    this.confirmOwnership(uuid, id);
+    return this.usersService.remove(id);
+  }
+
+  private confirmOwnership(uuid: string, id:string) {
+    if(uuid !== id) {
+      throw new ForbiddenException();
+    }
   }
 }
