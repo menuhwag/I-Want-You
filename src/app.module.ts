@@ -14,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     UsersModule,
     ConfigModule.forRoot({
-      envFilePath: [`${__dirname}/config/env/.${process.env.NODE_ENV}.env`],
+      envFilePath: [`${__dirname}/config/env/.${(process.env.NODE_ENV == undefined) ? 'development' : process.env.NOVE_ENV}.env`],
       load: [emailConfig, jwtConfig],
       isGlobal: true,
       validationSchema
