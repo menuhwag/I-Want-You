@@ -14,5 +14,5 @@ export class CreateRelationshipDto {
 
     @Column()
     @IsNotEmpty()
-    relationship: number;
+    relationship: 'FRIEND' | 'COWORKER' | 'FAMILY';
 }

@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity('Relationship')
-export class Relationship {
+export class RelationshipEntity {
     @PrimaryColumn()
     uuid: string;
 
@@ -12,7 +12,7 @@ export class Relationship {
     user_b_uuid: string;
 
     @Column()
-    relationship: number;
+    relationship: 'FRIEND' | 'COWORKER' | 'FAMILY';
 
     @Column()
     user_blocked: boolean;
