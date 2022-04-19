@@ -82,13 +82,7 @@ export class UsersService {
     return await this.authService.login(payload);
   }
 
-  public async findAll(uuid, offset: number, limit: number) {
-    const user = await this.userRepository.findOne({select: ['role'], where: {uuid}});
-
-    if (user == null || user.role != 'ADMIN') {
-      throw new BadRequestException();
-    }
-
+  public async findAll(offset: number, limit: number) {
     return await this.userRepository.find();
   }
 
