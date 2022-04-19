@@ -9,12 +9,7 @@ import { AuthGuard } from 'src/utile/guard/auth.guard';
 import { UserInfo } from 'src/utile/decorators/User.decorator';
 import { Roles } from 'src/utile/decorators/roles.decorator';
 import { RolesGuard } from 'src/utile/guard/roles.guard';
-
-interface UserInfo{
-  uuid: string;
-  username: string;
-  email: string;
-}
+import { OwnerGuard } from 'src/utile/guard/owner.guard';
 
 @Controller('users')
 export class UsersController {
@@ -54,38 +49,28 @@ export class UsersController {
   @Roles('ADMIN')
   @UseGuards(AuthGuard, RolesGuard)
   findAll(
-    @UserInfo('uuid') uuid,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
   ): Promise<UserEntity[]> {
-    return this.usersService.findAll(uuid, offset, limit);
+    return this.usersService.findAll(offset, limit);
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
-  findOne(@UserInfo('uuid') uuid, @Param('id') id: string): Promise<UserEntity> {
-    this.confirmOwnership(uuid, id);
+  @UseGuards(AuthGuard, OwnerGuard)
+  findOne(@Param('id') id: string): Promise<UserEntity> {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
-  update(@UserInfo('uuid') uuid, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    this.confirmOwnership(uuid, id);
+  @UseGuards(AuthGuard, OwnerGuard)
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, OwnerGuard)
   @HttpCode(204)
-  remove(@UserInfo('uuid') uuid, @Param('id') id: string) {
-    this.confirmOwnership(uuid, id);
+  remove(@Param('id') id: string) {
     return this.usersService.remove(id);
-  }
-
-  private confirmOwnership(uuid: string, id:string) {
-    if(uuid !== id) {
-      throw new ForbiddenException();
-    }
   }
 }
