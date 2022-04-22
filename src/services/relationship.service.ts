@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateRelationshipDto } from './dto/update-relationship.dto';
-import { RelationshipEntity } from './entities/relationship.entity';
+import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
+import { RelationshipEntity } from '../entities/relationship.entity';
 
 @Injectable()
 export class RelationshipService {

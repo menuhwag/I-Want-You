@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { RelationshipService } from './relationship.service';
-import { CreateRelationshipDto } from './dto/create-relationship.dto';
-import { UpdateRelationshipDto } from './dto/update-relationship.dto';
+import { RelationshipService } from '../services/relationship.service';
+import { CreateRelationshipDto } from '../dto/create-relationship.dto';
+import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
 import { AuthGuard } from 'src/utile/guard/auth.guard';
 import { Roles } from 'src/utile/decorators/roles.decorator';
 import { RolesGuard } from 'src/utile/guard/roles.guard';

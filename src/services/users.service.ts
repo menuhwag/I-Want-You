@@ -1,12 +1,12 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from 'src/auth/auth.service';
-import { EmailService } from 'src/email/email.service';
+import { AuthService } from './auth.service';
+import { EmailService } from './email.service';
 import { Repository } from 'typeorm';
 import { ulid } from 'ulid';
 import * as uuid from 'uuid';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserEntity } from '../entities/user.entity';
 const crypto = require('crypto');
 
 @Injectable()

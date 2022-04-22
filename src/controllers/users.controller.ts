@@ -1,12 +1,11 @@
 import { Controller, Get, Post, Body, Query, Patch, Param, Delete, HttpCode, ParseIntPipe, DefaultValuePipe, UseGuards, Request, ForbiddenException } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { EmailVerifyDto } from './dto/email-verify.dto';
-import { LoginDto } from './dto/login.dto';
-import { UserEntity } from './entities/user.entity';
+import { UsersService } from '../services/users.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { EmailVerifyDto } from '../dto/email-verify.dto';
+import { LoginDto } from '../dto/login.dto';
+import { UserEntity } from '../entities/user.entity';
 import { AuthGuard } from 'src/utile/guard/auth.guard';
-import { UserInfo } from 'src/utile/decorators/User.decorator';
 import { Roles } from 'src/utile/decorators/roles.decorator';
 import { RolesGuard } from 'src/utile/guard/roles.guard';
 import { OwnerGuard } from 'src/utile/guard/owner.guard';
