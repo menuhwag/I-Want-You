@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ulid } from 'ulid';
 import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
 import { RelationshipEntity } from '../entities/relationship.entity';
 
@@ -49,6 +50,7 @@ export class RelationshipService {
 
   private async saveRelationship(myUUID: string, friendUUID: string, relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND') {
     const relationship = new RelationshipEntity();
+    relationship.uuid = ulid();
     relationship.profile_blocked = false;
     relationship.user_blocked = false;
     relationship.user_a_uuid = myUUID;

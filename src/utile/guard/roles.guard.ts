@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

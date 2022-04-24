@@ -5,6 +5,7 @@ import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
 import { AuthGuard } from 'src/utile/guard/auth.guard';
 import { Roles } from 'src/utile/decorators/roles.decorator';
 import { RolesGuard } from 'src/utile/guard/roles.guard';
+import { UserInfo } from 'src/utile/decorators/user.decorator';
 
 @Roles('ADMIN')
 @UseGuards(AuthGuard, RolesGuard)
@@ -24,12 +25,12 @@ export class RelationshipController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto) {
+  update(@UserInfo('uuid') uuid: string, @Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto) {
     return this.relationshipService.update(id, updateRelationshipDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@UserInfo('uuid') uuid: string, @Param('id') id: string) {
     return this.relationshipService.remove(id);
   }
 

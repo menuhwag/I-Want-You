@@ -39,11 +39,6 @@ export class UsersController {
     return this.usersService.checkExists(key, value);
   }
 
-  @Get('/test')
-  test(){
-    return this.usersService.test();
-  }
-
   @Get()
   @Roles('ADMIN')
   @UseGuards(AuthGuard, RolesGuard)

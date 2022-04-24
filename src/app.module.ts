@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import emailConfig from './config/emailConfig';
 import jwtConfig from './config/jwtConfig';
 import { validationSchema } from './config/validationSchema';
-import { EmailModule } from './email/email.module';
-import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './modules/email.module';
+import { AuthModule } from './modules/auth.module';
+import { FriendsModule } from './modules/friends.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
     }),
     EmailModule,
-    AuthModule
+    AuthModule,
+    FriendsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,5 +13,6 @@ import { RelationshipEntity } from '../entities/relationship.entity';
     AuthModule,
     TypeOrmModule.forFeature([UserEntity, RelationshipEntity])
   ],
+  exports: [RelationshipService]
 })
 export class RelationshipModule {}
