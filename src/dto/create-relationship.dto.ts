@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 import { Column } from "typeorm";
 
 export class CreateRelationshipDto {
@@ -13,6 +13,14 @@ export class CreateRelationshipDto {
     user_b_uuid: string;
 
     @Column()
-    @IsNotEmpty()
+    @IsString()
     relationship: 'FRIEND' | 'COWORKER' | 'FAMILY';
+
+    @Column()
+    @IsBoolean()
+    user_blocked: boolean;
+
+    @Column()
+    @IsBoolean()
+    profile_blocked: boolean;
 }

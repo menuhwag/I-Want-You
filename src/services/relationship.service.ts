@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { ulid } from 'ulid';
 import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
 import { RelationshipEntity } from '../entities/relationship.entity';
@@ -23,7 +23,7 @@ export class RelationshipService {
     return await this.relationshipRepository.find();
   }
 
-  public async findAllByUUID(userUUID: string) {
+  public async findAllByUser(userUUID: string) {
     const relationship = await this.relationshipRepository.find({where : { user_a_uuid : userUUID }});
     if (!relationship) {
       throw new NotFoundException();
@@ -31,7 +31,7 @@ export class RelationshipService {
     return relationship;
   }
 
-  public async findOne(id: string) {
+  public async findOneByUUID(id: string) {
     const relationship = await this.relationshipRepository.findOne({where: {uuid : id}});
     if (!relationship) {
       throw new NotFoundException();
@@ -39,13 +39,32 @@ export class RelationshipService {
     return relationship;
   }
 
-  public async update(id: string, updateRelationshipDto: UpdateRelationshipDto) {
-    return `This action updates a #${id} relationship`;
+  public async findOneByUser(userA_UUID: string, userB_UUID: string) {
+    const relationship = await this.relationshipRepository.findOne({where:{user_a_uuid:userA_UUID, user_b_uuid:userB_UUID}});
+    if (!relationship) {
+      throw new NotFoundException();
+    }
+    return relationship;
+  }
+
+  public async update(id: string, updateRelDto: UpdateRelationshipDto) {
+    const relationship = await this. findOneByUUID(id);
+    for (const key in Object(updateRelDto)) {
+      relationship[key] = updateRelDto[key];
+    }
+    return await this.relationshipRepository.save(relationship);
   }
 
   public async remove(id: string) {
-    const relationship = await this.findOne(id);
-    return await this.relationshipRepository.remove(relationship);
+    const relationship = await this.findOneByUUID(id);
+    if (!relationship) {
+      throw new NotFoundException();
+    }
+    try{
+      await this.relationshipRepository.remove(relationship);
+    }catch {
+      throw new ConflictException();
+    }
   }
 
   private async saveRelationship(myUUID: string, friendUUID: string, relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND') {

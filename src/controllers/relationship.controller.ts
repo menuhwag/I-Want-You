@@ -21,7 +21,7 @@ export class RelationshipController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.relationshipService.findOne(id);
+    return this.relationshipService.findOneByUUID(id);
   }
 
   @Patch(':id')
