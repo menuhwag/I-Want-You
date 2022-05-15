@@ -8,13 +8,9 @@ import { RelationshipEntity } from '../entities/relationship.entity';
 import { MyloggerModule } from './mylogger.module';
 
 @Module({
-  controllers: [RelationshipController],
-  providers: [RelationshipService],
-  imports: [
-    AuthModule,
-    MyloggerModule,
-    TypeOrmModule.forFeature([UserEntity, RelationshipEntity])
-  ],
-  exports: [RelationshipService]
+    controllers: [RelationshipController],
+    providers: [RelationshipService],
+    imports: [AuthModule, MyloggerModule, TypeOrmModule.forFeature([UserEntity, RelationshipEntity])],
+    exports: [RelationshipService],
 })
 export class RelationshipModule {}

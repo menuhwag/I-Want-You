@@ -14,34 +14,33 @@ export class AuthService {
     private secret: string;
 
     constructor(
-        @Inject(jwtConfig.KEY) private config: ConfigType<typeof jwtConfig>
-    ){
-        if (!config.key){
+        @Inject(jwtConfig.KEY) private config: ConfigType<typeof jwtConfig>,
+    ) {
+        if (!config.key) {
             throw new Error('missing JWT KEY');
         }
         this.secret = config.key;
     }
-    public login(user: User){
+    public login(user: User) {
         const payload = { ...user };
 
         return jwt.sign(payload, this.secret, {
-            expiresIn: '1d'
-        })
+            expiresIn: '1d',
+        });
     }
     public verify(jwtString: string) {
         try {
-          const payload = jwt.verify(jwtString, this.secret) as (jwt.JwtPayload | string) & User;
-  
-          const { uuid, username, email } = payload;
-  
-          return {
-            uuid,
-            username,
-            email,
-          }
-  
+            const payload = jwt.verify(jwtString, this.secret) as (jwt.JwtPayload | string) & User;
+
+            const { uuid, username, email } = payload;
+
+            return {
+                uuid,
+                username,
+                email,
+            };
         } catch (e) {
-          throw new UnauthorizedException()
+            throw new UnauthorizedException();
         }
-      }
+    }
 }

@@ -4,7 +4,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import emailConfig from 'src/config/emailConfig';
 import { ConfigType } from '@nestjs/config';
 
-
 interface EmailOption {
     to: string;
     subject: string;
@@ -16,14 +15,14 @@ export class EmailService {
     private transporter: Mail;
 
     constructor(
-        @Inject(emailConfig.KEY) private config: ConfigType<typeof emailConfig>
+        @Inject(emailConfig.KEY) private config: ConfigType<typeof emailConfig>,
     ) {
         this.transporter = nodemailer.createTransport({
             service: config.service,
             auth: {
                 user: config.auth.user,
-                pass: config.auth.pass
-            }
+                pass: config.auth.pass,
+            },
         });
     }
 
@@ -39,8 +38,8 @@ export class EmailService {
                 <form action="${url}" method="POST">
                 <button>가입확인</button>
                 </form>
-            `
-        }
+            `,
+        };
 
         return await this.transporter.sendMail(mailOptions);
     }

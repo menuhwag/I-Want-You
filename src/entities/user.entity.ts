@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('User')
 export class UserEntity {
@@ -20,7 +20,7 @@ export class UserEntity {
     @Column()
     foo: string;
 
-    @Column({ length: 15})
+    @Column({ length: 15 })
     nickname: string;
 
     @Column()

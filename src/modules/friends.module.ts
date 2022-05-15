@@ -5,11 +5,8 @@ import { RelationshipModule } from './relationship.module';
 import { AuthModule } from './auth.module';
 
 @Module({
-  controllers: [FriendsController],
-  providers: [FriendsService],
-  imports: [
-    RelationshipModule,
-    AuthModule
-  ],
+    controllers: [FriendsController],
+    providers: [FriendsService],
+    imports: [RelationshipModule, AuthModule],
 })
 export class FriendsModule {}

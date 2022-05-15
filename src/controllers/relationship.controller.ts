@@ -11,31 +11,31 @@ import { UserInfo } from 'src/utile/decorators/user.decorator';
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('relationship')
 export class RelationshipController {
-  constructor(private readonly relationshipService: RelationshipService) {}
+    constructor(private readonly relationshipService: RelationshipService) {}
 
-  @Post()
-  create(@Body() createRelationshipDto: CreateRelationshipDto) {
-    const {user_a_uuid, user_b_uuid, relationship} = createRelationshipDto;
-    return this.relationshipService.create(user_a_uuid, user_b_uuid, relationship);
-  }
+    @Post()
+    create(@Body() createRelationshipDto: CreateRelationshipDto) {
+        const { user_a_uuid, user_b_uuid, relationship } = createRelationshipDto;
+        return this.relationshipService.create(user_a_uuid, user_b_uuid, relationship);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.relationshipService.findOneByUUID(id);
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.relationshipService.findOneByUUID(id);
+    }
 
-  @Patch(':id')
-  update(@UserInfo('uuid') uuid: string, @Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto) {
-    return this.relationshipService.update(id, updateRelationshipDto);
-  }
+    @Patch(':id')
+    update(@UserInfo('uuid') uuid: string, @Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto) {
+        return this.relationshipService.update(id, updateRelationshipDto);
+    }
 
-  @Delete(':id')
-  remove(@UserInfo('uuid') uuid: string, @Param('id') id: string) {
-    return this.relationshipService.remove(id);
-  }
+    @Delete(':id')
+    remove(@UserInfo('uuid') uuid: string, @Param('id') id: string) {
+        return this.relationshipService.remove(id);
+    }
 
-  @Get()
-  findAll() {
-    return this.relationshipService.findAll();
-  }
+    @Get()
+    findAll() {
+        return this.relationshipService.findAll();
+    }
 }

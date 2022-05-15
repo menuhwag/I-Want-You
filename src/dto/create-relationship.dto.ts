@@ -1,5 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
-import { Column } from "typeorm";
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class CreateRelationshipDto {
     @Column()

@@ -3,18 +3,18 @@ import { RelationshipController } from './relationship.controller';
 import { RelationshipService } from '../services/relationship.service';
 
 describe('RelationshipController', () => {
-  let controller: RelationshipController;
+    let controller: RelationshipController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [RelationshipController],
-      providers: [RelationshipService],
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [RelationshipController],
+            providers: [RelationshipService],
+        }).compile();
 
-    controller = module.get<RelationshipController>(RelationshipController);
-  });
+        controller = module.get<RelationshipController>(RelationshipController);
+    });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    it('should be defined', () => {
+        expect(controller).toBeDefined();
+    });
 });
