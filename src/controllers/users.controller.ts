@@ -18,7 +18,7 @@ export class UsersController {
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto): Promise<string> {
+    create(@Body() createUserDto: CreateUserDto): Promise<string | undefined> {
         this.logger.debug('회원가입 요청');
         const { username, email, password, nickname } = createUserDto;
         return this.usersService.create(username, email, password, nickname);
