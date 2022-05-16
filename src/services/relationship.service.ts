@@ -1,25 +1,14 @@
-import {
-    BadRequestException,
-    ConflictException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ulid } from 'ulid';
 import { UpdateRelationshipDto } from '../dto/update-relationship.dto';
 import { RelationshipEntity } from '../entities/relationship.entity';
 
 @Injectable()
 export class RelationshipService {
-    constructor(
-        @InjectRepository(RelationshipEntity) private relationshipRepository: Repository<RelationshipEntity>,
-    ) {}
-    public async create(
-        myUUID: string,
-        friendUUID: string,
-        relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND',
-    ) {
+    constructor(@InjectRepository(RelationshipEntity) private relationshipRepository: Repository<RelationshipEntity>) {}
+    public async create(myUUID: string, friendUUID: string, relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND') {
         // 이미 등록되어있는지 확인 checkExists
         const relationship = await this.relationshipRepository.findOne({
             where: { user_a_uuid: myUUID, user_b_uuid: friendUUID },
@@ -84,11 +73,7 @@ export class RelationshipService {
         }
     }
 
-    private async saveRelationship(
-        myUUID: string,
-        friendUUID: string,
-        relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND',
-    ) {
+    private async saveRelationship(myUUID: string, friendUUID: string, relation: 'FRIEND' | 'COWORKER' | 'FAMILY' = 'FRIEND') {
         const relationship = new RelationshipEntity();
         relationship.uuid = ulid();
         relationship.profile_blocked = false;
