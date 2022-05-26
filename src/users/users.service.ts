@@ -91,6 +91,7 @@ export class UsersService {
             throw e;
         } finally {
             await queryRunner.release(); // 트랜잭션 릴리즈
+            console.log('트랜잭션 릴리즈');
         }
     }
 
