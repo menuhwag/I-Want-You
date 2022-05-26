@@ -12,7 +12,10 @@ export class ProfileEntity {
     name: string = '';
 
     @Column()
-    birth: Date = new Date(1900, 0, 1);
+    birthyear: string = '1900';
+
+    @Column()
+    birthday: string = '0101';
 
     @Column()
     hobby: string = '';

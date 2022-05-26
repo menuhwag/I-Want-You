@@ -8,10 +8,11 @@ import { MyloggerModule } from '../mylogger/mylogger.module';
 import { ProfilesModule } from '../profiles/profiles.module';
 import { EmailService } from './adapter/email.service';
 import { UsersRepository } from './repository/users.repository';
+import { ProfileEntity } from 'src/profiles/entities/profile.entity';
 
 @Module({
     controllers: [UsersController],
     providers: [UsersService, EmailService, { provide: 'UsersRepository', useClass: UsersRepository }],
-    imports: [AuthModule, MyloggerModule, ProfilesModule, TypeOrmModule.forFeature([UserEntity])],
+    imports: [AuthModule, MyloggerModule, ProfilesModule, TypeOrmModule.forFeature([UserEntity, ProfileEntity])],
 })
 export class UsersModule {}

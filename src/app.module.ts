@@ -10,6 +10,8 @@ import { validationSchema } from './config/validationSchema';
 import { AuthModule } from './auth/auth.module';
 import { FriendsModule } from './friends/friends.module';
 import { MyloggerModule } from './mylogger/mylogger.module';
+import { RelationshipModule } from './relationship/relationship.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
     imports: [
@@ -33,6 +35,8 @@ import { MyloggerModule } from './mylogger/mylogger.module';
         AuthModule,
         FriendsModule,
         MyloggerModule,
+        RelationshipModule,
+        ProfilesModule,
     ],
     controllers: [AppController],
     providers: [AppService],
