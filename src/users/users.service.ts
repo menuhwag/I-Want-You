@@ -2,7 +2,6 @@ import { BadRequestException, Inject, Injectable, NotFoundException, Unauthorize
 import { AuthService } from '../auth/auth.service';
 import { EmailService } from './adapter/email.service';
 import { Connection } from 'typeorm';
-import { ulid } from 'ulid';
 import * as uuid from 'uuid';
 import { UserEntity } from './entities/user.entity';
 import { ProfilesService } from '../profiles/profiles.service';
@@ -51,23 +50,34 @@ export class UsersService {
             ////
 
             // 유저 Entity 생성
-            const user = new UserEntity();
-            user.uuid = ulid();
-            user.username = username;
-            user.email = email;
-            user.foo = this.generateSalt();
-            user.password = this.hash(password, user.foo);
-            user.verifyToken = uuid.v1();
-            user.nickname = nickname;
-            user.allow_public = true;
-            user.is_active = false;
-            user.role = 'USER';
+            let user: UserEntity = new UserEntity();
+            if (process.env.NODE_ENV == 'production') {
+                user.username = username;
+                user.email = email;
+                user.foo = this.generateSalt();
+                user.password = this.hash(password, user.foo);
+                user.verifyToken = uuid.v1();
+                user.nickname = nickname;
+                user.allow_public = true;
+                user.is_active = false;
+                user.role = 'USER';
+            } else if (process.env.NODE_ENV == undefined) {
+                user.username = username;
+                user.email = email;
+                user.foo = this.generateSalt();
+                user.password = this.hash(password, user.foo);
+                user.verifyToken = '';
+                user.nickname = nickname;
+                user.allow_public = true;
+                user.is_active = true;
+                user.role = 'USER';
+            }
             ////
 
             await queryRunner.manager.save(user); // 유저 Entity 저장
 
             // 프로필 중복체크
-            if (await this.profilesService.checkExists(user.uuid)) {
+            if (await this.profilesService.checkExists(user.id)) {
                 console.log('create() 프로필 중복');
                 throw new BadRequestException();
             }
@@ -75,14 +85,15 @@ export class UsersService {
 
             // 프로필 Entity 생성
             const profile = new ProfileEntity();
-            profile.uuid = ulid();
-            profile.user = user.uuid;
+            profile.user = user.id;
             ////
 
             await queryRunner.manager.save(profile); // 프로필 Entity 저장
 
             await queryRunner.commitTransaction(); // 트랙잭션 커밋
-            await this.emailService.sendVerification(email, user.verifyToken); // 인증메일 전송
+            if (process.env.NODE_ENV == 'production') {
+                await this.emailService.sendVerification(email, user.verifyToken); // 인증메일 전송
+            }
             console.log('create() 회원가입 완료');
         } catch (e) {
             await queryRunner.rollbackTransaction(); // 트랜잭션 롤백
@@ -96,7 +107,7 @@ export class UsersService {
     }
 
     public async verifyEmail(verifyToken: string): Promise<void> {
-        const user = await this.usersRepository.findOneByVerifyToken(verifyToken, ['uuid']);
+        const user = await this.usersRepository.findOneByVerifyToken(verifyToken, ['id']);
 
         if (!user) {
             console.log('verifyEmail() 유저정보 없음');
@@ -108,12 +119,12 @@ export class UsersService {
             is_active: true,
         };
 
-        await this.usersRepository.update(user.uuid, query);
+        await this.usersRepository.update(user.id, query);
     }
 
     public async login(username: string, password: string): Promise<string> {
         // username으로 조회
-        const user = await this.usersRepository.findOneByUsername(username, ['uuid', 'username', 'password', 'foo', 'is_active', 'verifyToken', 'email']);
+        const user = await this.usersRepository.findOneByUsername(username, ['id', 'username', 'password', 'foo', 'is_active', 'verifyToken', 'email']);
         if (!user) {
             console.log('login() 유저정보 없음');
             throw new UnauthorizedException();
@@ -136,7 +147,7 @@ export class UsersService {
         }
         // jwt 발급
         const payload = {
-            uuid: user.uuid,
+            id: user.id,
             username: user.username,
             email: user.email,
         };
@@ -144,7 +155,7 @@ export class UsersService {
     }
 
     public async findAll(offset: number, limit: number): Promise<UserEntity[] | null> {
-        return await this.usersRepository.find(offset, limit);
+        return await this.usersRepository.findAll(offset, limit);
     }
 
     public async findOne(id: string): Promise<UserEntity | null> {
@@ -162,7 +173,7 @@ export class UsersService {
             return uuid;
         });
         console.log(uuids);
-        return await this.usersRepository.findByUUID(uuids, ['uuid', 'username', 'email', 'nickname', 'allow_public', 'is_active']);
+        return await this.usersRepository.findByUUID(uuids, ['id', 'username', 'email', 'nickname', 'allow_public', 'is_active']);
     }
 
     public async update(id: string, query: object): Promise<void> {
@@ -194,9 +205,9 @@ export class UsersService {
                 throw new NotFoundException();
             }
             // await queryRunner.manager.delete(RelationshipEntity, [{ user_a_uuid: user.uuid }, { user_b_uuid: user.uuid }]); // Not Working
-            await queryRunner.manager.delete(RelationshipEntity, { user_a_uuid: user.uuid });
-            await queryRunner.manager.delete(RelationshipEntity, { user_b_uuid: user.uuid });
-            await queryRunner.manager.delete(ProfileEntity, { user: user.uuid });
+            await queryRunner.manager.delete(RelationshipEntity, { user_a_uuid: user.id });
+            await queryRunner.manager.delete(RelationshipEntity, { user_b_uuid: user.id });
+            await queryRunner.manager.delete(ProfileEntity, { user: user.id });
             await queryRunner.manager.delete(UserEntity, user);
             await queryRunner.commitTransaction();
             console.log('remove() 회원탈퇴 완료');
