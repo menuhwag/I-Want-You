@@ -12,14 +12,14 @@ export class RolesGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
         const user = request.user;
-        const uuid = user.uuid;
-        const userRole = await this.getUserRole(uuid);
+        const id = user.id;
+        const userRole = await this.getUserRole(id);
         this.logger.debug(userRole);
         const roles = this.reflector.getAllAndMerge<string[]>('roles', [context.getHandler(), context.getClass()]);
         return roles?.includes(userRole) ?? true;
     }
-    private async getUserRole(uuid: string): Promise<string> {
-        const user = await this.userRepository.findOne({ where: { uuid } });
+    private async getUserRole(id: string): Promise<string> {
+        const user = await this.userRepository.findOne({ where: { id } });
         if (!user) {
             throw new NotFoundException();
         }

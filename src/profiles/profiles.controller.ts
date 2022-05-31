@@ -21,12 +21,12 @@ export class ProfilesController {
     }
 
     @Get('me')
-    findMyProfile(@UserInfo('uuid') me: string) {
+    findMyProfile(@UserInfo('id') me: string) {
         return this.profilesService.findOneByUser(me);
     }
 
     @Patch('me')
-    update(@UserInfo('uuid') me: string, @Body() updateProfileDto: UpdateProfileDto): Promise<void> | void {
+    update(@UserInfo('id') me: string, @Body() updateProfileDto: UpdateProfileDto): Promise<void> | void {
         let query = Object(updateProfileDto);
         if (Object.keys(query).includes('hobby') && query.hobby.length > 0) {
             let hobbyStr = '';

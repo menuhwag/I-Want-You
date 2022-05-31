@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Relationship')
 export class RelationshipEntity {
-    @PrimaryColumn()
-    uuid: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column()
     user_a_uuid: string;

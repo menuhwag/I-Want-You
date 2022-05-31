@@ -31,13 +31,13 @@ export class RelationshipController {
     }
 
     @Patch(':id')
-    update(@UserInfo('uuid') uuid: string, @Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto): Promise<void> {
+    update(@UserInfo('id') uuid: string, @Param('id') id: string, @Body() updateRelationshipDto: UpdateRelationshipDto): Promise<void> {
         const query = Object(updateRelationshipDto);
         return this.relationshipService.update(id, uuid, query);
     }
 
     @Delete(':id')
-    remove(@UserInfo('uuid') uuid: string, @Param('id') id: string): Promise<void> {
+    remove(@UserInfo('id') uuid: string, @Param('id') id: string): Promise<void> {
         return this.relationshipService.remove(id, uuid);
     }
 }

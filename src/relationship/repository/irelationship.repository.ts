@@ -5,8 +5,8 @@ export interface IRelationshipRepository {
     findOneByUUID(UUID: string, select?: FindOptionsSelect<RelationshipEntity> | FindOptionsSelectByString<RelationshipEntity>): Promise<RelationshipEntity | null>;
     findOneByUsers(userA: string, userB: string, select?: FindOptionsSelect<RelationshipEntity> | FindOptionsSelectByString<RelationshipEntity>): Promise<RelationshipEntity | null>;
     findByUser(userA: string, select?: FindOptionsSelect<RelationshipEntity> | FindOptionsSelectByString<RelationshipEntity>): Promise<RelationshipEntity[] | null>;
-    find(offset: number, limit: number): Promise<RelationshipEntity[] | null>;
-    save(UUID: string, userA: string, userB: string): Promise<void>;
+    findAll(offset: number, limit: number): Promise<RelationshipEntity[] | null>;
+    save(userA: string, userB: string): Promise<void>;
     update(UUID: string, query: object): Promise<void>;
     delete(UUID: string): Promise<void>;
 }

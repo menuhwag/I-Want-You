@@ -1,6 +1,5 @@
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ProfileEntity } from './entities/profile.entity';
-import { Connection } from 'typeorm';
 import { IProfilesRepository } from './repository/iprofiles.repository';
 
 @Injectable()
@@ -17,7 +16,7 @@ export class ProfilesService {
     }
 
     public async find(offset: number, limit: number): Promise<ProfileEntity[] | null> {
-        return this.profilesRepository.find(offset, limit);
+        return this.profilesRepository.findAll(offset, limit);
     }
 
     public async checkExists(user: string): Promise<Boolean> {
@@ -31,8 +30,10 @@ export class ProfilesService {
             throw new NotFoundException();
         }
         if (profile.user !== user) {
+            console.log(`profile.user : ${profile.user}`);
+            console.log(`user : ${user}`);
             throw new BadRequestException();
         }
-        await this.profilesRepository.update(profile.uuid, query);
+        await this.profilesRepository.update(profile.id, query);
     }
 }

@@ -10,9 +10,8 @@ import { UpdateRelationshipDto } from '../relationship/dto/update-relationship.d
 export class FriendsController {
     constructor(private readonly friendsService: FriendsService) {}
 
-    @Post()
-    add(@UserInfo('uuid') myUUID: string, @Body() addFriendDto: AddFriendDto) {
-        const { friendUUID } = addFriendDto;
+    @Post('me/:id')
+    add(@UserInfo('id') myUUID: string, @Param('id') friendUUID: string) {
         if (myUUID == friendUUID) {
             throw new BadRequestException();
         }
@@ -20,28 +19,28 @@ export class FriendsController {
     }
 
     @Get('me')
-    getMyFriends(@UserInfo('uuid') myUUID: string) {
+    getMyFriends(@UserInfo('id') myUUID: string) {
         return this.friendsService.findByUser(myUUID);
     }
 
     @Get('me/:uuid')
-    getMyFriend(@UserInfo('uuid') myUUID: string, @Param('uuid') friendUUID: string) {
+    getMyFriend(@UserInfo('id') myUUID: string, @Param('uuid') friendUUID: string) {
         return this.friendsService.findMyFriend(myUUID, friendUUID);
     }
 
     @Patch('me/:uuid')
-    patchMyFriend(@UserInfo('uuid') myUUID: string, @Param('uuid') friendUUID: string, @Body() updateRelDto: UpdateRelationshipDto) {
+    patchMyFriend(@UserInfo('id') myUUID: string, @Param('uuid') friendUUID: string, @Body() updateRelDto: UpdateRelationshipDto) {
         return this.friendsService.updateMyFriend(myUUID, friendUUID, updateRelDto);
     }
 
     @HttpCode(204)
     @Delete('me/:uuid')
-    deleteMyFriend(@UserInfo('uuid') myUUID: string, @Param('uuid') friendUUID: string) {
+    deleteMyFriend(@UserInfo('id') myUUID: string, @Param('uuid') friendUUID: string) {
         return this.friendsService.deleteMyFriend(myUUID, friendUUID);
     }
 
-    @Get(':uuid')
-    getOtherFriends(@Param('uuid') uuid: string) {
-        return this.friendsService.findByUser(uuid);
+    @Get(':id')
+    getOtherFriends(@Param('id') id: string) {
+        return this.friendsService.findByUser(id);
     }
 }

@@ -4,7 +4,7 @@ import jwtConfig from 'src/config/jwtConfig';
 import { ConfigType } from '@nestjs/config';
 
 interface User {
-    uuid: string;
+    id: string;
     username: string;
     email: string;
 }
@@ -30,10 +30,10 @@ export class AuthService {
         try {
             const payload = jwt.verify(jwtString, this.secret) as (jwt.JwtPayload | string) & User;
 
-            const { uuid, username, email } = payload;
+            const { id, username, email } = payload;
 
             return {
-                uuid,
+                id,
                 username,
                 email,
             };

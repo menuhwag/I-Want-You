@@ -1,5 +1,4 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { ulid } from 'ulid';
 import { RelationshipEntity } from './entities/relationship.entity';
 import { IRelationshipRepository } from './repository/irelationship.repository';
 
@@ -11,12 +10,11 @@ export class RelationshipService {
         if (relationship) {
             throw new BadRequestException();
         }
-        const uuid = ulid();
-        await this.relationshipRepository.save(uuid, userA, userB);
+        await this.relationshipRepository.save(userA, userB);
     }
 
     public async findAll(offset: number, limit: number): Promise<RelationshipEntity[] | null> {
-        return await this.relationshipRepository.find(offset, limit);
+        return await this.relationshipRepository.findAll(offset, limit);
     }
 
     public async findAllByUser(userA: string): Promise<RelationshipEntity[] | null> {

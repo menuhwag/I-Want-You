@@ -26,10 +26,10 @@ export class UsersRepository implements IUserRepository {
             where: { nickname },
         });
     }
-    async findOneByUUID(UUID: string, select?: FindOptionsSelect<UserEntity> | FindOptionsSelectByString<UserEntity>): Promise<UserEntity | null> {
+    async findOneByUUID(id: string, select?: FindOptionsSelect<UserEntity> | FindOptionsSelectByString<UserEntity>): Promise<UserEntity | null> {
         return await this.usersRepository.findOne({
             select,
-            where: { uuid: UUID },
+            where: { id },
         });
     }
     async findOneByVerifyToken(verifyToken: string, select?: FindOptionsSelect<UserEntity> | FindOptionsSelectByString<UserEntity>): Promise<UserEntity | null> {
@@ -38,26 +38,25 @@ export class UsersRepository implements IUserRepository {
             where: { verifyToken },
         });
     }
-    async findByUUID(UUIDs: object[], select?: FindOptionsSelect<UserEntity> | FindOptionsSelectByString<UserEntity>): Promise<UserEntity[] | null> {
+    async findByUUID(ids: object[], select?: FindOptionsSelect<UserEntity> | FindOptionsSelectByString<UserEntity>): Promise<UserEntity[] | null> {
         const users = await this.usersRepository.find({
             select,
-            where: UUIDs,
+            where: ids,
         });
         if (!users) {
             return null;
         }
         return users;
     }
-    async find(offset: number, limit: number): Promise<UserEntity[] | null> {
-        const users = await this.usersRepository.find({ skip: offset, take: limit });
+    async findAll(offset: number, limit: number): Promise<UserEntity[] | null> {
+        const users = await this.usersRepository.find({ skip: offset, take: limit, order: { username: 'ASC' } });
         if (!users) {
             return null;
         }
         return users;
     }
-    async save(uuid: string, username: string, email: string, password: string, nickname: string, verifyToken: string, foo: string): Promise<void> {
+    async save(username: string, email: string, password: string, nickname: string, verifyToken: string, foo: string): Promise<void> {
         const user = new UserEntity();
-        user.uuid = uuid;
         user.username = username;
         user.email = email;
         user.foo = foo;
@@ -67,8 +66,8 @@ export class UsersRepository implements IUserRepository {
 
         await this.usersRepository.save(user);
     }
-    async update(UUID: string, query: object): Promise<void> {
-        const user = await this.usersRepository.findOne({ where: { uuid: UUID } });
+    async update(id: string, query: object): Promise<void> {
+        const user = await this.usersRepository.findOne({ where: { id } });
         if (user instanceof UserEntity) {
             for (const key in query) {
                 user[key] = query[key];
@@ -76,7 +75,7 @@ export class UsersRepository implements IUserRepository {
             await this.usersRepository.save(user);
         }
     }
-    async delete(UUID: string): Promise<void> {
-        await this.usersRepository.delete(UUID);
+    async delete(id: string): Promise<void> {
+        await this.usersRepository.delete(id);
     }
 }
