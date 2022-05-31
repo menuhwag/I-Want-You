@@ -12,6 +12,7 @@ import { FriendsModule } from './friends/friends.module';
 import { MyloggerModule } from './mylogger/mylogger.module';
 import { RelationshipModule } from './relationship/relationship.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { AskModule } from './ask/ask.module';
 
 @Module({
     imports: [
@@ -37,6 +38,7 @@ import { ProfilesModule } from './profiles/profiles.module';
         MyloggerModule,
         RelationshipModule,
         ProfilesModule,
+        AskModule,
     ],
     controllers: [AppController],
     providers: [AppService],
